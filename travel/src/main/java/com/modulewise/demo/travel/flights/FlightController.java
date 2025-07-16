@@ -2,6 +2,10 @@ package com.modulewise.demo.travel.flights;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/flights")
+@Tag(name = "Flights", description = "Flight management operations")
 public class FlightController {
 
     private static final Logger logger = LoggerFactory.getLogger(FlightController.class);
@@ -33,6 +38,8 @@ public class FlightController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all flights", description = "Retrieves all available flights")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved flights")
     public String getFlights() {
         logger.info("GET /flights called");
         try {
@@ -44,7 +51,10 @@ public class FlightController {
     }
 
     @GetMapping("/{id}")
-    public String getFlightById(@PathVariable String id) {
+    @Operation(summary = "Get flight by ID", description = "Retrieves a specific flight by its ID")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved flight")
+    @ApiResponse(responseCode = "404", description = "Flight not found")
+    public String getFlightById(@Parameter(description = "Flight ID") @PathVariable String id) {
         logger.info("GET /flights/{} called", id);
         String flightJson = flightService.getFlightById(id);
         if (flightJson == null) {
@@ -54,6 +64,9 @@ public class FlightController {
     }
 
     @PostMapping
+    @Operation(summary = "Create flights", description = "Creates one or more flights")
+    @ApiResponse(responseCode = "200", description = "Successfully created flights")
+    @ApiResponse(responseCode = "400", description = "Invalid flight data")
     public ResponseEntity<String> postFlights(@RequestBody Object flightData) {
         logger.info("POST /flights called");
         try {
@@ -83,6 +96,9 @@ public class FlightController {
     }
 
     @PostMapping("/search")
+    @Operation(summary = "Search flights", description = "Search for flights based on criteria")
+    @ApiResponse(responseCode = "200", description = "Successfully found matching flights")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     public ResponseEntity<List<Flight>> searchFlights(@RequestBody FlightSearch flightSearch) {
         logger.info("POST /flights/search called");
         try {
@@ -127,6 +143,9 @@ public class FlightController {
     }
 
     @PostMapping("/bookings")
+    @Operation(summary = "Create flight booking", description = "Creates a new flight booking")
+    @ApiResponse(responseCode = "200", description = "Successfully created booking")
+    @ApiResponse(responseCode = "400", description = "Invalid booking data")
     public ResponseEntity<String> createBooking(@RequestBody Object bookingData) {
         logger.info("POST /flights/bookings called");
         try {
@@ -151,6 +170,8 @@ public class FlightController {
     }
 
     @GetMapping("/bookings")
+    @Operation(summary = "Get all flight bookings", description = "Retrieves all flight bookings")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved bookings")
     public String getBookings() {
         logger.info("GET /flights/bookings called");
         try {
@@ -162,7 +183,10 @@ public class FlightController {
     }
 
     @GetMapping("/bookings/{id}")
-    public String getBookingById(@PathVariable String id) {
+    @Operation(summary = "Get flight booking by ID", description = "Retrieves a specific flight booking by its ID")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved booking")
+    @ApiResponse(responseCode = "404", description = "Booking not found")
+    public String getBookingById(@Parameter(description = "Booking ID") @PathVariable String id) {
         logger.info("GET /flights/bookings/{} called", id);
         String bookingJson = flightService.getBookingById(id);
         if (bookingJson == null) {

@@ -2,6 +2,10 @@ package com.modulewise.demo.travel.hotels;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/hotels")
+@Tag(name = "Hotels", description = "Hotel management operations")
 public class HotelController {
 
     private static final Logger logger = LoggerFactory.getLogger(HotelController.class);
@@ -33,6 +38,8 @@ public class HotelController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all hotels", description = "Retrieves all available hotels")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved hotels")
     public String getHotels() {
         logger.info("GET /hotels called");
         try {
@@ -44,7 +51,10 @@ public class HotelController {
     }
 
     @GetMapping("/{id}")
-    public String getHotelById(@PathVariable String id) {
+    @Operation(summary = "Get hotel by ID", description = "Retrieves a specific hotel by its ID")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved hotel")
+    @ApiResponse(responseCode = "404", description = "Hotel not found")
+    public String getHotelById(@Parameter(description = "Hotel ID") @PathVariable String id) {
         logger.info("GET /hotels/{} called", id);
         String hotelJson = hotelService.getHotelById(id);
         if (hotelJson == null) {
@@ -54,6 +64,9 @@ public class HotelController {
     }
 
     @PostMapping
+    @Operation(summary = "Create hotels", description = "Creates one or more hotels")
+    @ApiResponse(responseCode = "200", description = "Successfully created hotels")
+    @ApiResponse(responseCode = "400", description = "Invalid hotel data")
     public ResponseEntity<String> postHotels(@RequestBody Object hotelData) {
         logger.info("POST /hotels called");
         try {
@@ -83,6 +96,9 @@ public class HotelController {
     }
 
     @PostMapping("/search")
+    @Operation(summary = "Search hotels", description = "Search for hotels based on criteria")
+    @ApiResponse(responseCode = "200", description = "Successfully found matching hotels")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     public ResponseEntity<List<Hotel>> searchHotels(@RequestBody HotelSearch hotelSearch) {
         logger.info("POST /hotels/search called");
         try {
@@ -117,6 +133,9 @@ public class HotelController {
     }
 
     @PostMapping("/bookings")
+    @Operation(summary = "Create hotel booking", description = "Creates a new hotel booking")
+    @ApiResponse(responseCode = "200", description = "Successfully created booking")
+    @ApiResponse(responseCode = "400", description = "Invalid booking data")
     public ResponseEntity<String> createBooking(@RequestBody Object bookingData) {
         logger.info("POST /hotels/bookings called");
         try {
@@ -144,6 +163,8 @@ public class HotelController {
     }
 
     @GetMapping("/bookings")
+    @Operation(summary = "Get all hotel bookings", description = "Retrieves all hotel bookings")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved bookings")
     public String getBookings() {
         logger.info("GET /hotels/bookings called");
         try {
@@ -155,7 +176,10 @@ public class HotelController {
     }
 
     @GetMapping("/bookings/{id}")
-    public String getBookingById(@PathVariable String id) {
+    @Operation(summary = "Get hotel booking by ID", description = "Retrieves a specific hotel booking by its ID")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved booking")
+    @ApiResponse(responseCode = "404", description = "Booking not found")
+    public String getBookingById(@Parameter(description = "Booking ID") @PathVariable String id) {
         logger.info("GET /hotels/bookings/{} called", id);
         String bookingJson = hotelService.getBookingById(id);
         if (bookingJson == null) {
