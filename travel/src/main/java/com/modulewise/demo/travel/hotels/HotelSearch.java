@@ -1,6 +1,8 @@
 package com.modulewise.demo.travel.hotels;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 
 public class HotelSearch {
@@ -14,6 +16,8 @@ public class HotelSearch {
     private LocalDate checkout;
 
     private Integer flex = 0; // flexibility in days
+
+    @JsonProperty("minstars")
     private Integer minStars = 1; // minimum star rating
 
     public HotelSearch() {}
