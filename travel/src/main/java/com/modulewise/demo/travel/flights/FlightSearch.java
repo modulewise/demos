@@ -14,11 +14,11 @@ public class FlightSearch {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime arrival;
 
-    private int flex = 1;
+    private Integer flex = 1;
 
     public FlightSearch() {}
 
-    public FlightSearch(String id, String origin, String destination, LocalDateTime departure, LocalDateTime arrival, int flex) {
+    public FlightSearch(String id, String origin, String destination, LocalDateTime departure, LocalDateTime arrival, Integer flex) {
         this.origin = origin;
         this.destination = destination;
         this.departure = departure;
@@ -58,11 +58,11 @@ public class FlightSearch {
         this.arrival = arrival;
     }
 
-    public int getFlex() {
+    public Integer getFlex() {
         return flex;
     }
 
-    public void setFlex(int flex) {
-        this.flex = flex;
+    public void setFlex(Integer flex) {
+        this.flex = (flex != null) ? flex : 1;
     }
 }

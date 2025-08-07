@@ -13,12 +13,12 @@ public class HotelSearch {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkout;
 
-    private int flex = 0; // flexibility in days
-    private int minStars = 1; // minimum star rating
+    private Integer flex = 0; // flexibility in days
+    private Integer minStars = 1; // minimum star rating
 
     public HotelSearch() {}
 
-    public HotelSearch(String city, LocalDate checkin, LocalDate checkout, int flex, int minStars) {
+    public HotelSearch(String city, LocalDate checkin, LocalDate checkout, Integer flex, Integer minStars) {
         this.city = city;
         this.checkin = checkin;
         this.checkout = checkout;
@@ -50,19 +50,19 @@ public class HotelSearch {
         this.checkout = checkout;
     }
 
-    public int getFlex() {
+    public Integer getFlex() {
         return flex;
     }
 
-    public void setFlex(int flex) {
-        this.flex = flex;
+    public void setFlex(Integer flex) {
+        this.flex = (flex != null) ? flex : 0;
     }
 
-    public int getMinStars() {
+    public Integer getMinStars() {
         return minStars;
     }
 
-    public void setMinStars(int minStars) {
-        this.minStars = minStars;
+    public void setMinStars(Integer minStars) {
+        this.minStars = (minStars != null) ? minStars : 1;
     }
 }
