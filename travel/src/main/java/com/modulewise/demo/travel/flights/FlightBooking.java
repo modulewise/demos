@@ -2,10 +2,14 @@ package com.modulewise.demo.travel.flights;
 
 import com.modulewise.demo.travel.Person;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import java.time.LocalDateTime;
 
+@RedisHash("flight_bookings")
 public class FlightBooking {
 
+    @Id
     private String id;
     private Flight flight;
     private Person passenger;

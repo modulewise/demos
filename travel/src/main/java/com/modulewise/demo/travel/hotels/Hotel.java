@@ -1,7 +1,12 @@
 package com.modulewise.demo.travel.hotels;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+
+@RedisHash("hotels")
 public class Hotel {
 
+    @Id
     private String id;
     private String name;
     private String city;

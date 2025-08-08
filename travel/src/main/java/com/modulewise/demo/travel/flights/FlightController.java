@@ -1,6 +1,5 @@
 package com.modulewise.demo.travel.flights;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,27 +39,22 @@ public class FlightController {
     @GetMapping
     @Operation(summary = "Get all flights", description = "Retrieves all available flights")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved flights")
-    public String getFlights() {
+    public List<Flight> getFlights() {
         logger.info("GET /flights called");
-        try {
-            Map<Object, Object> flights = flightService.getAllFlights();
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(flights);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing flights", e);
-        }
+        return flightService.getAllFlights();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get flight by ID", description = "Retrieves a specific flight by its ID")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved flight")
     @ApiResponse(responseCode = "404", description = "Flight not found")
-    public String getFlightById(@Parameter(description = "Flight ID") @PathVariable String id) {
+    public ResponseEntity<Flight> getFlightById(@Parameter(description = "Flight ID") @PathVariable String id) {
         logger.info("GET /flights/{} called", id);
-        String flightJson = flightService.getFlightById(id);
-        if (flightJson == null) {
-            return "{}";
+        Flight flight = flightService.getFlightById(id);
+        if (flight == null) {
+            return ResponseEntity.notFound().build();
         }
-        return flightJson;
+        return ResponseEntity.ok(flight);
     }
 
     @PostMapping
@@ -103,10 +97,8 @@ public class FlightController {
         logger.info("POST /flights/search called");
         try {
             List<Flight> matchingFlights = new ArrayList<>();
-            Map<Object, Object> allFlights = flightService.getAllFlights();
-            for (Map.Entry<Object, Object> entry : allFlights.entrySet()) {
-                String flightJson = (String) entry.getValue();
-                Flight flight = objectMapper.readValue(flightJson, Flight.class);
+            List<Flight> allFlights = flightService.getAllFlights();
+            for (Flight flight : allFlights) {
                 if (isFlightMatch(flight, flightSearch)) {
                     matchingFlights.add(flight);
                 }
@@ -172,26 +164,21 @@ public class FlightController {
     @GetMapping("/bookings")
     @Operation(summary = "Get all flight bookings", description = "Retrieves all flight bookings")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved bookings")
-    public String getBookings() {
+    public List<FlightBooking> getBookings() {
         logger.info("GET /flights/bookings called");
-        try {
-            Map<Object, Object> bookings = flightService.getAllBookings();
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(bookings);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing bookings", e);
-        }
+        return flightService.getAllBookings();
     }
 
     @GetMapping("/bookings/{id}")
     @Operation(summary = "Get flight booking by ID", description = "Retrieves a specific flight booking by its ID")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved booking")
     @ApiResponse(responseCode = "404", description = "Booking not found")
-    public String getBookingById(@Parameter(description = "Booking ID") @PathVariable String id) {
+    public ResponseEntity<FlightBooking> getBookingById(@Parameter(description = "Booking ID") @PathVariable String id) {
         logger.info("GET /flights/bookings/{} called", id);
-        String bookingJson = flightService.getBookingById(id);
-        if (bookingJson == null) {
-            return "{}";
+        FlightBooking booking = flightService.getBookingById(id);
+        if (booking == null) {
+            return ResponseEntity.notFound().build();
         }
-        return bookingJson;
+        return ResponseEntity.ok(booking);
     }
 }
