@@ -1,100 +1,86 @@
 package com.modulewise.demo.travel.flights;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.modulewise.demo.travel.Person;
+import com.modulewise.demo.travel.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
 
 @Service
 public class FlightService {
 
-    private static final String FLIGHTS_HASH = "flights";
-    private static final String BOOKINGS_HASH = "flight_bookings";
-    private static final String PERSONS_HASH = "persons";
-
-    private final RedisTemplate<String, String> redisTemplate;
-    private final ObjectMapper objectMapper;
+    private final FlightRepository flightRepository;
+    private final FlightBookingRepository flightBookingRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
-    public FlightService(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
-        this.redisTemplate = redisTemplate;
-        this.objectMapper = objectMapper;
+    public FlightService(FlightRepository flightRepository, FlightBookingRepository flightBookingRepository,
+                        PersonRepository personRepository) {
+        this.flightRepository = flightRepository;
+        this.flightBookingRepository = flightBookingRepository;
+        this.personRepository = personRepository;
     }
 
     public String createFlight(Flight flight) {
-        try {
-            String key = flight.getId();
-            String flightJson = objectMapper.writeValueAsString(flight);
-            redisTemplate.opsForHash().put(FLIGHTS_HASH, key, flightJson);
-            return key;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing flight", e);
-        }
+        Flight savedFlight = flightRepository.save(flight);
+        return savedFlight.getId();
     }
 
-    public String getFlightById(String id) {
-        return (String) redisTemplate.opsForHash().get(FLIGHTS_HASH, id);
+    public Flight getFlightById(String id) {
+        Optional<Flight> flight = flightRepository.findById(id);
+        return flight.orElse(null);
     }
 
-    public Map<Object, Object> getAllFlights() {
-        return redisTemplate.opsForHash().entries(FLIGHTS_HASH);
+    public List<Flight> getAllFlights() {
+        return StreamSupport.stream(flightRepository.findAll().spliterator(), false)
+                .toList();
     }
 
     public String createBooking(FlightBooking booking) {
-        try {
-            String key = booking.getId();
-            String bookingJson = objectMapper.writeValueAsString(booking);
-            redisTemplate.opsForHash().put(BOOKINGS_HASH, key, bookingJson);
-            return key;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing booking", e);
-        }
+        FlightBooking savedBooking = flightBookingRepository.save(booking);
+        return savedBooking.getId();
     }
 
-    public String getBookingById(String id) {
-        return (String) redisTemplate.opsForHash().get(BOOKINGS_HASH, id);
+    public FlightBooking getBookingById(String id) {
+        Optional<FlightBooking> booking = flightBookingRepository.findById(id);
+        return booking.orElse(null);
     }
 
-    public Map<Object, Object> getAllBookings() {
-        return redisTemplate.opsForHash().entries(BOOKINGS_HASH);
+    public List<FlightBooking> getAllBookings() {
+        return StreamSupport.stream(flightBookingRepository.findAll().spliterator(), false)
+                .toList();
     }
 
     public String createBookingFromIds(String flightId, String personId) {
-        try {
-            String flightJson = getFlightById(flightId);
-            if (flightJson == null) {
-                throw new RuntimeException("Flight not found: " + flightId);
-            }
-            Flight flight = objectMapper.readValue(flightJson, Flight.class);
-
-            String personJson = (String) redisTemplate.opsForHash().get(PERSONS_HASH, personId);
-            if (personJson == null) {
-                throw new RuntimeException("Person not found: " + personId);
-            }
-            Person person = objectMapper.readValue(personJson, Person.class);
-
-            String bookingId = UUID.randomUUID().toString();
-            String bookingReference = generateBookingReference();
-
-            FlightBooking booking = new FlightBooking(
-                bookingId,
-                flight,
-                person,
-                bookingReference,
-                null, // seat number - to be assigned later
-                LocalDateTime.now(),
-                "CONFIRMED"
-            );
-            return createBooking(booking);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error processing booking creation", e);
+        Flight flight = getFlightById(flightId);
+        if (flight == null) {
+            throw new RuntimeException("Flight not found: " + flightId);
         }
+
+        Optional<Person> personOpt = personRepository.findById(personId);
+        if (personOpt.isEmpty()) {
+            throw new RuntimeException("Person not found: " + personId);
+        }
+        Person person = personOpt.get();
+
+        String bookingId = UUID.randomUUID().toString();
+        String bookingReference = generateBookingReference();
+
+        FlightBooking booking = new FlightBooking(
+            bookingId,
+            flight,
+            person,
+            bookingReference,
+            null, // seat number - to be assigned later
+            LocalDateTime.now(),
+            "CONFIRMED"
+        );
+        return createBooking(booking);
     }
 
     private String generateBookingReference() {
@@ -102,17 +88,12 @@ public class FlightService {
     }
 
     public String createPerson(Person person) {
-        try {
-            String key = person.getId();
-            String personJson = objectMapper.writeValueAsString(person);
-            redisTemplate.opsForHash().put(PERSONS_HASH, key, personJson);
-            return key;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing person", e);
-        }
+        Person savedPerson = personRepository.save(person);
+        return savedPerson.getId();
     }
 
-    public String getPersonById(String id) {
-        return (String) redisTemplate.opsForHash().get(PERSONS_HASH, id);
+    public Person getPersonById(String id) {
+        Optional<Person> person = personRepository.findById(id);
+        return person.orElse(null);
     }
 }

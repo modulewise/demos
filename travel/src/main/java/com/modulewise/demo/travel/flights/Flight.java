@@ -1,10 +1,14 @@
 package com.modulewise.demo.travel.flights;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import java.time.LocalDateTime;
 
+@RedisHash("flights")
 public class Flight {
 
+    @Id
     private String id;
     private String airline;
     private String number;

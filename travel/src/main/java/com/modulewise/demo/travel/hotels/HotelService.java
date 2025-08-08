@@ -1,104 +1,90 @@
 package com.modulewise.demo.travel.hotels;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.modulewise.demo.travel.Person;
+import com.modulewise.demo.travel.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
 
 @Service
 public class HotelService {
 
-    private static final String HOTELS_HASH = "hotels";
-    private static final String HOTEL_BOOKINGS_HASH = "hotel_bookings";
-    private static final String PERSONS_HASH = "persons";
-
-    private final RedisTemplate<String, String> redisTemplate;
-    private final ObjectMapper objectMapper;
+    private final HotelRepository hotelRepository;
+    private final HotelBookingRepository hotelBookingRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
-    public HotelService(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
-        this.redisTemplate = redisTemplate;
-        this.objectMapper = objectMapper;
+    public HotelService(HotelRepository hotelRepository, HotelBookingRepository hotelBookingRepository,
+                       PersonRepository personRepository) {
+        this.hotelRepository = hotelRepository;
+        this.hotelBookingRepository = hotelBookingRepository;
+        this.personRepository = personRepository;
     }
 
     public String createHotel(Hotel hotel) {
-        try {
-            String key = hotel.getId();
-            String hotelJson = objectMapper.writeValueAsString(hotel);
-            redisTemplate.opsForHash().put(HOTELS_HASH, key, hotelJson);
-            return key;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing hotel", e);
-        }
+        Hotel savedHotel = hotelRepository.save(hotel);
+        return savedHotel.getId();
     }
 
-    public String getHotelById(String id) {
-        return (String) redisTemplate.opsForHash().get(HOTELS_HASH, id);
+    public Hotel getHotelById(String id) {
+        Optional<Hotel> hotel = hotelRepository.findById(id);
+        return hotel.orElse(null);
     }
 
-    public Map<Object, Object> getAllHotels() {
-        return redisTemplate.opsForHash().entries(HOTELS_HASH);
+    public List<Hotel> getAllHotels() {
+        return StreamSupport.stream(hotelRepository.findAll().spliterator(), false)
+                .toList();
     }
 
     public String createBooking(HotelBooking booking) {
-        try {
-            String key = booking.getId();
-            String bookingJson = objectMapper.writeValueAsString(booking);
-            redisTemplate.opsForHash().put(HOTEL_BOOKINGS_HASH, key, bookingJson);
-            return key;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing booking", e);
-        }
+        HotelBooking savedBooking = hotelBookingRepository.save(booking);
+        return savedBooking.getId();
     }
 
-    public String getBookingById(String id) {
-        return (String) redisTemplate.opsForHash().get(HOTEL_BOOKINGS_HASH, id);
+    public HotelBooking getBookingById(String id) {
+        Optional<HotelBooking> booking = hotelBookingRepository.findById(id);
+        return booking.orElse(null);
     }
 
-    public Map<Object, Object> getAllBookings() {
-        return redisTemplate.opsForHash().entries(HOTEL_BOOKINGS_HASH);
+    public List<HotelBooking> getAllBookings() {
+        return StreamSupport.stream(hotelBookingRepository.findAll().spliterator(), false)
+                .toList();
     }
 
     public String createBookingFromIds(String hotelId, String personId, LocalDate checkin, LocalDate checkout) {
-        try {
-            String hotelJson = getHotelById(hotelId);
-            if (hotelJson == null) {
-                throw new RuntimeException("Hotel not found: " + hotelId);
-            }
-            Hotel hotel = objectMapper.readValue(hotelJson, Hotel.class);
-
-            String personJson = (String) redisTemplate.opsForHash().get(PERSONS_HASH, personId);
-            if (personJson == null) {
-                throw new RuntimeException("Person not found: " + personId);
-            }
-            Person person = objectMapper.readValue(personJson, Person.class);
-
-            String bookingId = UUID.randomUUID().toString();
-            String bookingReference = generateBookingReference();
-
-            HotelBooking booking = new HotelBooking(
-                bookingId,
-                hotel,
-                person,
-                bookingReference,
-                null, // room number - to be assigned later
-                "Standard", // default room type
-                checkin,
-                checkout,
-                LocalDateTime.now(),
-                "CONFIRMED"
-            );
-            return createBooking(booking);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error processing booking creation", e);
+        Hotel hotel = getHotelById(hotelId);
+        if (hotel == null) {
+            throw new RuntimeException("Hotel not found: " + hotelId);
         }
+
+        Optional<Person> personOpt = personRepository.findById(personId);
+        if (personOpt.isEmpty()) {
+            throw new RuntimeException("Person not found: " + personId);
+        }
+        Person person = personOpt.get();
+
+        String bookingId = UUID.randomUUID().toString();
+        String bookingReference = generateBookingReference();
+
+        HotelBooking booking = new HotelBooking(
+            bookingId,
+            hotel,
+            person,
+            bookingReference,
+            null, // room number - to be assigned later
+            "Standard", // default room type
+            checkin,
+            checkout,
+            LocalDateTime.now(),
+            "CONFIRMED"
+        );
+        return createBooking(booking);
     }
 
     private String generateBookingReference() {
@@ -106,17 +92,12 @@ public class HotelService {
     }
 
     public String createPerson(Person person) {
-        try {
-            String key = person.getId();
-            String personJson = objectMapper.writeValueAsString(person);
-            redisTemplate.opsForHash().put(PERSONS_HASH, key, personJson);
-            return key;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing person", e);
-        }
+        Person savedPerson = personRepository.save(person);
+        return savedPerson.getId();
     }
 
-    public String getPersonById(String id) {
-        return (String) redisTemplate.opsForHash().get(PERSONS_HASH, id);
+    public Person getPersonById(String id) {
+        Optional<Person> person = personRepository.findById(id);
+        return person.orElse(null);
     }
 }

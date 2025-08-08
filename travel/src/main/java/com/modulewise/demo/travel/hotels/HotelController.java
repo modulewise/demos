@@ -1,6 +1,5 @@
 package com.modulewise.demo.travel.hotels;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,27 +39,22 @@ public class HotelController {
     @GetMapping
     @Operation(summary = "Get all hotels", description = "Retrieves all available hotels")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved hotels")
-    public String getHotels() {
+    public List<Hotel> getHotels() {
         logger.info("GET /hotels called");
-        try {
-            Map<Object, Object> hotels = hotelService.getAllHotels();
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(hotels);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing hotels", e);
-        }
+        return hotelService.getAllHotels();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get hotel by ID", description = "Retrieves a specific hotel by its ID")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved hotel")
     @ApiResponse(responseCode = "404", description = "Hotel not found")
-    public String getHotelById(@Parameter(description = "Hotel ID") @PathVariable String id) {
+    public ResponseEntity<Hotel> getHotelById(@Parameter(description = "Hotel ID") @PathVariable String id) {
         logger.info("GET /hotels/{} called", id);
-        String hotelJson = hotelService.getHotelById(id);
-        if (hotelJson == null) {
-            return "{}";
+        Hotel hotel = hotelService.getHotelById(id);
+        if (hotel == null) {
+            return ResponseEntity.notFound().build();
         }
-        return hotelJson;
+        return ResponseEntity.ok(hotel);
     }
 
     @PostMapping
@@ -103,12 +97,9 @@ public class HotelController {
         logger.info("POST /hotels/search called");
         try {
             List<Hotel> matchingHotels = new ArrayList<>();
-            Map<Object, Object> allHotels = hotelService.getAllHotels();
+            List<Hotel> allHotels = hotelService.getAllHotels();
 
-            for (Map.Entry<Object, Object> entry : allHotels.entrySet()) {
-                String hotelJson = (String) entry.getValue();
-                Hotel hotel = objectMapper.readValue(hotelJson, Hotel.class);
-
+            for (Hotel hotel : allHotels) {
                 if (isHotelMatch(hotel, hotelSearch)) {
                     matchingHotels.add(hotel);
                 }
@@ -165,26 +156,21 @@ public class HotelController {
     @GetMapping("/bookings")
     @Operation(summary = "Get all hotel bookings", description = "Retrieves all hotel bookings")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved bookings")
-    public String getBookings() {
+    public List<HotelBooking> getBookings() {
         logger.info("GET /hotels/bookings called");
-        try {
-            Map<Object, Object> bookings = hotelService.getAllBookings();
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(bookings);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing bookings", e);
-        }
+        return hotelService.getAllBookings();
     }
 
     @GetMapping("/bookings/{id}")
     @Operation(summary = "Get hotel booking by ID", description = "Retrieves a specific hotel booking by its ID")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved booking")
     @ApiResponse(responseCode = "404", description = "Booking not found")
-    public String getBookingById(@Parameter(description = "Booking ID") @PathVariable String id) {
+    public ResponseEntity<HotelBooking> getBookingById(@Parameter(description = "Booking ID") @PathVariable String id) {
         logger.info("GET /hotels/bookings/{} called", id);
-        String bookingJson = hotelService.getBookingById(id);
-        if (bookingJson == null) {
-            return "{}";
+        HotelBooking booking = hotelService.getBookingById(id);
+        if (booking == null) {
+            return ResponseEntity.notFound().build();
         }
-        return bookingJson;
+        return ResponseEntity.ok(booking);
     }
 }

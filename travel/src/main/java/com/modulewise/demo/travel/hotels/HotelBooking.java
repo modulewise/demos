@@ -2,11 +2,15 @@ package com.modulewise.demo.travel.hotels;
 
 import com.modulewise.demo.travel.Person;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@RedisHash("hotel_bookings")
 public class HotelBooking {
 
+    @Id
     private String id;
     private Hotel hotel;
     private Person guest;

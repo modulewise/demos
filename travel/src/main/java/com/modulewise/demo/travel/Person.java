@@ -1,10 +1,14 @@
 package com.modulewise.demo.travel;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import java.util.ArrayList;
 import java.util.List;
 
+@RedisHash("persons")
 public class Person {
 
+    @Id
     private String id;
     private String firstName;
     private String lastName;
