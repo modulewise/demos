@@ -37,14 +37,8 @@ public class FlightService {
     }
 
     public List<Flight> getAllFlights() {
-        try {
-            return StreamSupport.stream(flightRepository.findAll().spliterator(), false)
-                    .toList();
-        } catch (Exception e) {
-            System.err.println("Error in getAllFlights: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Failed to retrieve flights", e);
-        }
+        return StreamSupport.stream(flightRepository.findAll().spliterator(), false)
+                .toList();
     }
 
     public String createBooking(FlightBooking booking) {
