@@ -1,13 +1,9 @@
-# Demo APIs
+# Modulewise Demos
 
-A collection of APIs used in Modulewise demos.
-
-## APIs
-
-- [`travel`](./travel/)
+- [`travel`](./travel/README.md)
 
 ## License
 
-Copyright (c) 2025 Modulewise Inc and the Modulewise Toolbelt contributors.
+Copyright (c) 2025 Modulewise Inc and the Modulewise Demos contributors.
 
 Apache License v2.0: see [LICENSE](./LICENSE) for details.
