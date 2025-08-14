@@ -1,0 +1,27 @@
+interface hotels {
+    record hotel {
+        id: string,
+        name: string,
+        city: string,
+        stars: s32,
+        description: string,
+    }
+
+    get-hotel-by-id: func(id: string) -> option<hotel>;
+
+    get-hotels: func() -> list<hotel>;
+
+    search-hotels: func(
+        city: string,
+        checkin: string,
+        checkout: string,
+        flex: option<u8>,
+        minstars: option<u8>
+    ) -> list<hotel>;
+}
+
+world hotels-world {
+    include wasi:config/imports@0.2.0-draft;
+    import rest-client;
+    export hotels;
+}

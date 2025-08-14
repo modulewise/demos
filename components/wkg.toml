@@ -1,0 +1,3 @@
+[overrides]
+"wasi:config" = { path = "./wit/overrides/wasi-config" }
+"wasi:keyvalue" = { path = "./wit/overrides/wasi-keyvalue" }

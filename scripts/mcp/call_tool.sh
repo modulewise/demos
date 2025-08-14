@@ -72,4 +72,9 @@ CALL_RESPONSE=$(curl -s -X POST "$SERVER" \
     }
   }")
 
-echo "$CALL_RESPONSE" | grep "^data:" | sed 's/^data: //' | jq .
+if [ -z "$CALL_RESPONSE" ]; then
+    echo "Error: No response from server. Session may have expired. Run ./initialize.sh to create a new session." >&2
+    exit 1
+fi
+
+echo "$CALL_RESPONSE" | sed -n '/^data: /,/^id: /{/^id: /d;p;}' | sed '1s/^data: //' | tr -d '\000-\037' | jq '.result.structuredContent // .'

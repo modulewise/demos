@@ -1,15 +1,15 @@
 [flights]
-uri = "../../example-components/lib/flights.wasm"
+uri = "../components/lib/flights.wasm"
 expects = ["rest-client"]
 exposed = true
 
 [hotels]
-uri = "../../example-components/lib/hotels.wasm"
+uri = "../components/lib/hotels.wasm"
 expects = ["rest-client"]
 exposed = true
 
 [rest-client]
-uri = "../../example-components/lib/rest_client.wasm"
+uri = "../components/lib/rest-client.wasm"
 expects = ["wasip2", "http"]
 enables = "exposed"
 

@@ -1,0 +1,12 @@
+/// the counter interface
+interface counter {
+    /// count things
+    count: func(thing: string) -> string;
+}
+
+/// the counter world
+world counter-world {
+    include wasi:config/imports@0.2.0-draft;
+    import incrementor;
+    export counter;
+}

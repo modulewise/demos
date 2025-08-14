@@ -1,0 +1,14 @@
+[workspace]
+members = [
+    "calculator",
+    "counter",
+    "flights",
+    "greeter",
+    "hotels",
+    "incrementor",
+    "rest-client",
+]
+resolver = "3"
+
+[workspace.dependencies]
+wit-bindgen = "0.44"

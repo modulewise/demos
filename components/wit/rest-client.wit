@@ -1,0 +1,12 @@
+interface rest-client {
+    /// get JSON string
+    get: func(url: string, headers: list<tuple<string, string>>) -> result<string, string>;
+
+    /// post JSON string
+    post: func(url: string, headers: list<tuple<string, string>>, body: string) -> result<string, string>;
+}
+
+world rest-client-world {
+    export rest-client;
+    import wasi:http/outgoing-handler@0.2.3;
+}

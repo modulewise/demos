@@ -1,0 +1,11 @@
+/// the greeter interface
+interface greeter {
+    /// greet whoever's name is provided
+    greet: func(name: string) -> string;
+}
+
+/// the greeter world
+world greeter-world {
+    include wasi:config/imports@0.2.0-draft;
+    export greeter;
+}
