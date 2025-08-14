@@ -68,10 +68,7 @@ CALL_RESPONSE=$(curl -s -X POST "$SERVER" \
     \"method\": \"tools/call\",
     \"params\": {
       \"name\": \"$TOOL_NAME\",
-      \"arguments\": $ARGUMENTS,
-      \"_meta\": {
-        \"progressToken\": 1
-      }
+      \"arguments\": $ARGUMENTS
     }
   }")
 
