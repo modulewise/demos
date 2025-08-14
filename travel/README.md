@@ -5,9 +5,9 @@
 The instructions below rely on the following assumptions:
 
 1. This [modulewise/demos](https://github.com/modulewise/demos)
-repository has been cloned into the same directory as the
-[modulewise/example-components](https://github.com/modulewise/example-components) repository.
-2. The example-components have been built locally as described in their README.
+repository has been cloned, and these instructions will be followed from
+within the `travel` directory.
+2. The Wasm Components have been built locally as described in `components/README.md`.
 3. The [Modulewise Toolbelt](https://github.com/modulewise/toolbelt) has
 been installed locally as described in its README.
 

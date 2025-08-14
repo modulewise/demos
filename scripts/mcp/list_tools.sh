@@ -31,4 +31,9 @@ TOOLS_RESPONSE=$(curl -s -X POST "$SERVER" \
     \"params\": {}
   }")
 
+if [ -z "$TOOLS_RESPONSE" ]; then
+    echo "Error: No response from server. Session may have expired. Run ./initialize.sh to create a new session." >&2
+    exit 1
+fi
+
 echo "$TOOLS_RESPONSE" | grep "^data:" | sed 's/^data: //' | jq .

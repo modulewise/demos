@@ -20,7 +20,8 @@ struct Incrementor;
 impl Incrementor {
     fn increment(key: &str) -> Result<i64, Error> {
         let bucket_key = config::store::get("bucket")
-            .unwrap_or_else(|_| Some(DEFAULT_BUCKET_NAME.to_string()))
+            .ok()
+            .flatten()
             .unwrap_or(DEFAULT_BUCKET_NAME.to_string());
         let bucket = store::open(&bucket_key)?;
         atomics::increment(&bucket, key, 1)

@@ -2,15 +2,14 @@
 
 set -euo pipefail
 
-cargo component build -p calculator --target wasm32-unknown-unknown --release
-cargo component build -p counter --target wasm32-unknown-unknown --release
-cargo component build -p flights --target wasm32-unknown-unknown --release
-cargo component build -p greeter --target wasm32-unknown-unknown --release
-cargo component build -p hotels --target wasm32-unknown-unknown --release
-cargo component build -p incrementor --target wasm32-unknown-unknown --release
-cargo component build -p rest-client --target wasm32-unknown-unknown --release
+PROJECTS="calculator counter flights greeter hotels incrementor rest-client"
 
-cp target/wasm32-unknown-unknown/release/*.wasm lib/
+for project in $PROJECTS; do
+  cargo component build -p $project --target wasm32-unknown-unknown --release
+  cargo_name=$(echo "$project" | tr '-' '_')
+  wasm_file="target/wasm32-unknown-unknown/release/${cargo_name}.wasm"
+  cp "$wasm_file" "lib/${project}.wasm"
+done
 
 # rely on default greeting "Hello"
 static-config -o ./lib/empty-config.wasm
