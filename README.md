@@ -1,5 +1,6 @@
 # Modulewise Demos
 
+- [`hello-world`](./hello-world/README.md)
 - [`travel`](./travel/README.md)
 
 ## License
