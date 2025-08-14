@@ -47,7 +47,7 @@ You will see the greeting in the response:
 }
 ```
 
-The `hello-world.toml` config also includes an `aloha_greet` tool that
+The `hello-world.toml` file also includes an `aloha` variant that
 uses the same `greeter.wasm` but includes `config.greeting = "Aloha"`
 to override the default "Hello" greeting:
 
