@@ -22,7 +22,7 @@ Generate sample data and post it to the REST API:
 
 ```sh
 (
-  cd api/sample-data
+  cd sample-data
   python generate-flights.py
   python generate-hotels.py
   ./post-flights.sh
