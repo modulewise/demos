@@ -29,7 +29,7 @@ With the session established, you can call the `hello_greet` tool with a `name` 
 ./../scripts/mcp/call_tool.sh hello_greet name=World
 ```
 
-The output should be similar to this:
+You will see the greeting in the response:
 
 ```json
 {
