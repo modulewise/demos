@@ -1,0 +1,8 @@
+[hello]
+uri = "../../example-components/lib/greeter.wasm"
+exposed = true
+
+[aloha]
+uri = "../../example-components/lib/greeter.wasm"
+config.greeting = "Aloha"
+exposed = true
