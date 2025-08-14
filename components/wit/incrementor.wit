@@ -1,0 +1,9 @@
+interface incrementor {
+    increment: func(key: string) -> result<s64, string>;
+}
+
+world incrementor-world {
+    import wasi:config/store@0.2.0-draft;
+    import wasi:keyvalue/atomics@0.2.0-draft2;
+    export incrementor;
+}
