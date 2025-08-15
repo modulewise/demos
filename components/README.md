@@ -2,13 +2,26 @@
 
 Wasm Components used in Modulewise Demos
 
-## Build
+## Prerequisites
 
 Requires a rust toolchain with the `wasm32-unknown-unknown` target as well as the following:
 - [`cargo-component`](https://github.com/bytecodealliance/cargo-component)
+- [`wac-cli`](https://github.com/bytecodealliance/wac)
 - [`wkg`](https://github.com/bytecodealliance/wasm-pkg-tools)
-- [`wac`](https://github.com/bytecodealliance/wac)
 - [`static-config`](https://github.com/componentized/static-config)
+
+If you first install [cargo-binstall](https://github.com/cargo-bins/cargo-binstall), you can install all of the above with the following:
+
+```sh
+cargo binstall -y cargo-component
+cargo binstall -y wac-cli
+cargo binstall -y wkg
+cargo binstall -y static-config
+```
+
+## Build
+
+Build all of the components in this directory and compose a few more with those:
 
 ```sh
 ./build.sh
@@ -16,7 +29,7 @@ Requires a rust toolchain with the `wasm32-unknown-unknown` target as well as th
 
 ## Run
 
-Requires [`wasmtime`](https://github.com/bytecodealliance/wasmtime) version 0.33 or later.
+Invoke the `greeter` and `calculator` components via [`wasmtime`](https://github.com/bytecodealliance/wasmtime) (requires version 0.33 or later):
 
 ```sh
 ./run.sh
