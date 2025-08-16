@@ -13,6 +13,6 @@ for COMPONENT in "${COMPONENTS[@]}"; do
     --annotation "org.opencontainers.image.revision=$(git rev-parse HEAD)" \
     --annotation "org.opencontainers.image.source=https://github.com/modulewise/demos" \
     --annotation "org.opencontainers.image.licenses=Apache-2.0" \
-    "ghcr.io/modulewise/${COMPONENT}:${VERSION}" \
+    "ghcr.io/modulewise/demo/${COMPONENT}:${VERSION}" \
     "lib/${COMPONENT}.wasm"
 done
