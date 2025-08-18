@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "calculator",
     "counter",
     "flights",
     "greeter",
