@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-PROJECTS="calculator counter flights greeter hotels incrementor rest-client"
+PROJECTS=`cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name'`
 
 for project in $PROJECTS; do
   cargo component build -p $project --target wasm32-unknown-unknown --release
@@ -10,6 +10,8 @@ for project in $PROJECTS; do
   wasm_file="target/wasm32-unknown-unknown/release/${cargo_name}.wasm"
   cp "$wasm_file" "lib/${project}.wasm"
 done
+
+( cd calculator; ./componentize.sh; cp calculator.wasm ../lib )
 
 # rely on default greeting "Hello"
 static-config -o ./lib/empty-config.wasm
