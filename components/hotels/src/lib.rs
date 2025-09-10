@@ -16,7 +16,7 @@ struct HotelSearchRequest {
     checkin: String,
     checkout: String,
     flex: Option<u8>,
-    minstars: Option<u8>
+    minstars: Option<u8>,
 }
 
 struct Hotels;
@@ -42,9 +42,7 @@ impl hotels::Guest for Hotels {
     fn get_hotels() -> Vec<hotels::Hotel> {
         let url = format!("{}/hotels", Self::base_url());
         match rest_client::get(&url, &[]) {
-            Ok(response) => {
-                serde_json::from_str(&response).unwrap_or_else(|_| vec![])
-            },
+            Ok(response) => serde_json::from_str(&response).unwrap_or_else(|_| vec![]),
             Err(_) => vec![],
         }
     }
@@ -54,7 +52,7 @@ impl hotels::Guest for Hotels {
         checkin: String,
         checkout: String,
         flex: Option<u8>,
-        minstars: Option<u8>
+        minstars: Option<u8>,
     ) -> Vec<hotels::Hotel> {
         let search_request = HotelSearchRequest {
             city,

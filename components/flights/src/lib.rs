@@ -42,9 +42,7 @@ impl flights::Guest for Flights {
     fn get_flights() -> Vec<flights::Flight> {
         let url = format!("{}/flights", Self::base_url());
         match rest_client::get(&url, &[]) {
-            Ok(response) => {
-                serde_json::from_str(&response).unwrap_or_else(|_| vec![])
-            },
+            Ok(response) => serde_json::from_str(&response).unwrap_or_else(|_| vec![]),
             Err(_) => vec![],
         }
     }
@@ -54,8 +52,8 @@ impl flights::Guest for Flights {
         destination: String,
         departure: String,
         arrival: Option<String>,
-        flex: Option<u8>
-    ) -> Vec::<flights::Flight> {
+        flex: Option<u8>,
+    ) -> Vec<flights::Flight> {
         let search_request = FlightSearchRequest {
             origin,
             destination,

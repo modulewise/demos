@@ -11,7 +11,11 @@ struct Counter;
 impl exports::modulewise::demo::counter::Guest for Counter {
     fn count(thing: String) -> String {
         let count = modulewise::demo::incrementor::increment(&thing).unwrap_or(0);
-        let thing = if count == 1 { thing } else { format!("{thing}s") };
+        let thing = if count == 1 {
+            thing
+        } else {
+            format!("{thing}s")
+        };
         let suffix = wasi::config::store::get("suffix")
             .ok()
             .flatten()
