@@ -1,0 +1,8 @@
+interface publisher {
+    publish: func(message: string);
+}
+
+world publisher-world {
+    import componentized:valkey/store;
+    export publisher;
+}

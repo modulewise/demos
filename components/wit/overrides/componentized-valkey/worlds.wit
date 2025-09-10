@@ -1,0 +1,5 @@
+package componentized:valkey;
+
+world imports {
+    import store;
+}

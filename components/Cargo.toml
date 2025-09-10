@@ -6,6 +6,7 @@ members = [
     "hotels",
     "incrementor",
     "intercepting-greeter",
+    "publisher",
     "rest-client",
 ]
 resolver = "3"

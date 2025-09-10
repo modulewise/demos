@@ -255,6 +255,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "publisher"
+version = "0.1.0"
+dependencies = [
+ "wit-bindgen",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
