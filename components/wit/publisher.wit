@@ -2,7 +2,7 @@ interface publisher {
     publish: func(message: string) -> result<s64, string>;
 }
 
-world publisher-world {
+world valkey-publisher-world {
     include wasi:config/imports@0.2.0-draft;
     import componentized:valkey/store;
     export publisher;

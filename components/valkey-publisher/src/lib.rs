@@ -4,7 +4,7 @@ use componentized::valkey::store::{self as valkey, HelloOpts};
 
 wit_bindgen::generate!({
     path: "../wit",
-    world: "publisher-world",
+    world: "valkey-publisher-world",
     generate_all
 });
 
