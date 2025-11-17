@@ -31,7 +31,7 @@ impl exports::modulewise::demo::publisher::Guest for Publisher {
 }
 
 fn get_config_value(key: &str, default: &str) -> String {
-    wasi::config::store::get(&key)
+    wasi::config::store::get(key)
         .ok()
         .flatten()
         .unwrap_or(default.to_string())
