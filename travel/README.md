@@ -30,6 +30,10 @@ Generate sample data and post it to the REST API:
 )
 ```
 
+That will create several dummy hotel and flight entries in the keyvalue store.
+By default, flights will be in the date range of 2026-03-01 to 2026-03-10.
+See the documentation in the generate scripts for more details.
+
 ## Run
 
 In a separate terminal, start the Toolbelt with the Travel Demo Tools:
@@ -43,6 +47,6 @@ the Streamable HTTP MCP transport and ask about flights and hotels.
 
 ## License
 
-Copyright (c) 2025 Modulewise Inc and the Modulewise Demos contributors.
+Copyright (c) 2026 Modulewise Inc and the Modulewise Demos contributors.
 
 Apache License v2.0: see [LICENSE](./LICENSE) for details.

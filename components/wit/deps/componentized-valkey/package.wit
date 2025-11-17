@@ -19,7 +19,7 @@ interface resp {
     big-number(string),
     bulk-error(string),
     verbatim-string(tuple<string, string>),
-    map(list<tuple<nested-value, nested-value>>),
+    %map(list<tuple<nested-value, nested-value>>),
     set(list<nested-value>),
     push(list<nested-value>),
   }

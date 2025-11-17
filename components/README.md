@@ -37,6 +37,6 @@ Invoke the `greeter` and `calculator` components via [`wasmtime`](https://github
 
 ## License
 
-Copyright (c) 2025 Modulewise Inc and the Modulewise Demos contributors.
+Copyright (c) 2026 Modulewise Inc and the Modulewise Demos contributors.
 
 Apache License v2.0: see [LICENSE](./LICENSE) for details.

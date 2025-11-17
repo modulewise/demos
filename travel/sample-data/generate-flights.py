@@ -19,8 +19,8 @@ from typing import List, Dict, Tuple
 import random
 
 # Configuration
-FIRST_DAY = "2025-10-01"
-LAST_DAY = "2025-10-10"
+FIRST_DAY = "2026-03-01"
+LAST_DAY = "2026-03-10"
 
 # Airlines and their operating airports
 AIRLINES = {
@@ -175,7 +175,7 @@ def main():
     print(f"Generated {len(flights)} flights")
     
     # Write to JSON file
-    output_file = f"flights_{first_day}_{last_day}.json"
+    output_file = "flights.json"
     with open(output_file, 'w') as f:
         json.dump(flights, f, indent=2)
     

@@ -3,7 +3,7 @@ interface publisher {
 }
 
 world valkey-publisher-world {
-    include wasi:config/imports@0.2.0-draft;
+    import wasi:config/store@0.2.0-rc.1;
     import componentized:valkey/store;
     export publisher;
 }

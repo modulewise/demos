@@ -1,4 +1,4 @@
-interface rest-client {
+interface http-client {
     record http-response {
         status: u16,
         headers: list<tuple<string, string>>,
@@ -12,7 +12,7 @@ interface rest-client {
     post: func(url: string, headers: list<tuple<string, string>>, body: string) -> result<http-response, string>;
 }
 
-world rest-client-world {
-    export rest-client;
-    import wasi:http/outgoing-handler@0.2.3;
+world http-client-world {
+    export http-client;
+    import wasi:http/outgoing-handler@0.2.6;
 }

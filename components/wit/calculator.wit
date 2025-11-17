@@ -1,20 +1,13 @@
-/// calculator operations
-interface calculator {
-
+world calculator {
     /// add two numbers
-    add: func(a: f32, b: f32) -> f32;
+    export add: func(a: s32, b: s32) -> s32;
 
     /// subtract the second number from the first
-    subtract: func(a: f32, b: f32) -> f32;
+    export subtract: func(a: s32, b: s32) -> s32;
 
     /// multiply two numbers
-    multiply: func(a: f32, b: f32) -> f32;
+    export multiply: func(a: s32, b: s32) -> s32;
 
     /// divide the first number by the second
-    divide: func(a: f32, b: f32) -> f32;
-}
-
-/// the calculator world
-world calculator-world {
-    export calculator;
+    export divide: func(a: s32, b: s32) -> s32;
 }
