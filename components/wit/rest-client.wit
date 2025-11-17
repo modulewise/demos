@@ -1,9 +1,15 @@
 interface rest-client {
-    /// get JSON string
-    get: func(url: string, headers: list<tuple<string, string>>) -> result<string, string>;
+    record http-response {
+        status: u16,
+        headers: list<tuple<string, string>>,
+        body: string,
+    }
 
-    /// post JSON string
-    post: func(url: string, headers: list<tuple<string, string>>, body: string) -> result<string, string>;
+    /// HTTP GET request
+    get: func(url: string, headers: list<tuple<string, string>>) -> result<http-response, string>;
+
+    /// HTTP POST request
+    post: func(url: string, headers: list<tuple<string, string>>, body: string) -> result<http-response, string>;
 }
 
 world rest-client-world {

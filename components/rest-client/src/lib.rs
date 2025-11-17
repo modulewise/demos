@@ -1,5 +1,6 @@
 #![no_main]
 
+use exports::modulewise::demo::rest_client::{Guest, HttpResponse};
 use wasi::http::types::{Headers, OutgoingBody, OutgoingRequest, Scheme};
 
 wit_bindgen::generate!({
@@ -16,10 +17,12 @@ impl RestClient {
         headers: Vec<(String, String)>,
         method: &wasi::http::types::Method,
         body: Option<String>,
-    ) -> Result<String, String> {
+    ) -> Result<HttpResponse, String> {
         let request_headers = Headers::new();
         for (name, value) in headers {
-            let _ = request_headers.append(&name, value.as_bytes());
+            request_headers
+                .append(&name, value.as_bytes())
+                .map_err(|_| format!("Failed to set header: {name}"))?
         }
 
         let request = OutgoingRequest::new(request_headers);
@@ -64,33 +67,52 @@ impl RestClient {
             .ok_or("Failed to get response".to_string())?
             .map_err(|()| "Request failed".to_string())?
             .map_err(|e| format!("HTTP error: {e:?}").replace("ErrorCode::", ""))?;
+
+        let status = response.status();
+
+        let headers: Vec<(String, String)> = response
+            .headers()
+            .entries()
+            .iter()
+            .map(|(k, v)| (k.clone(), String::from_utf8_lossy(v).to_string()))
+            .collect();
         let body = response
             .consume()
             .map_err(|()| "Failed to consume response body".to_string())?;
         let stream = body
             .stream()
             .map_err(|()| "Failed to get response stream".to_string())?;
-        let mut result = String::new();
+
+        let mut body_string = String::new();
         while let Ok(v) = stream.blocking_read(1024) {
             if v.is_empty() {
                 break;
             }
-            result.push_str(
+            body_string.push_str(
                 &String::from_utf8(v).map_err(|_| "Invalid UTF-8 in response".to_string())?,
             );
         }
         drop(stream);
         drop(body);
-        Ok(result)
+
+        Ok(HttpResponse {
+            status,
+            headers,
+            body: body_string,
+        })
     }
 }
 
-impl exports::modulewise::demo::rest_client::Guest for RestClient {
-    fn get(url: String, headers: Vec<(String, String)>) -> Result<String, String> {
+impl Guest for RestClient {
+    fn get(url: String, headers: Vec<(String, String)>) -> Result<HttpResponse, String> {
         Self::request(&url, headers, &wasi::http::types::Method::Get, None)
     }
 
-    fn post(url: String, headers: Vec<(String, String)>, body: String) -> Result<String, String> {
+    fn post(
+        url: String,
+        headers: Vec<(String, String)>,
+        body: String,
+    ) -> Result<HttpResponse, String> {
         Self::request(&url, headers, &wasi::http::types::Method::Post, Some(body))
     }
 }
