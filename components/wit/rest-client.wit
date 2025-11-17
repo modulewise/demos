@@ -14,5 +14,5 @@ interface rest-client {
 
 world rest-client-world {
     export rest-client;
-    import wasi:http/outgoing-handler@0.2.3;
+    import wasi:http/outgoing-handler@0.2.8;
 }

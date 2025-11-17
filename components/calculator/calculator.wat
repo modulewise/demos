@@ -1,22 +1,22 @@
 (module
-  (func (export "add") (param f32 f32) (result f32)
+  (func (export "add") (param i32 i32) (result i32)
     local.get 0
     local.get 1
-    f32.add
+    i32.add
   )
-  (func (export "subtract") (param f32 f32) (result f32)
+  (func (export "subtract") (param i32 i32) (result i32)
     local.get 0
     local.get 1
-    f32.sub
+    i32.sub
   )
-  (func (export "multiply") (param f32 f32) (result f32)
+  (func (export "multiply") (param i32 i32) (result i32)
     local.get 0
     local.get 1
-    f32.mul
+    i32.mul
   )
-  (func (export "divide") (param f32 f32) (result f32)
+  (func (export "divide") (param i32 i32) (result i32)
     local.get 0
     local.get 1
-    f32.div
+    i32.div_s
   )
 )
