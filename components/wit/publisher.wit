@@ -1,5 +1,5 @@
 interface publisher {
-    publish: func(message: string);
+    publish: func(message: string) -> result<s64, string>;
 }
 
 world publisher-world {
