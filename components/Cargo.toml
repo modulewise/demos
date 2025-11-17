@@ -7,6 +7,7 @@ members = [
     "incrementor",
     "intercepting-greeter",
     "rest-client",
+    "valkey-publisher",
 ]
 resolver = "3"
 
