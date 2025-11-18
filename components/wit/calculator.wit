@@ -2,16 +2,16 @@
 interface calculator {
 
     /// add two numbers
-    add: func(a: f32, b: f32) -> f32;
+    add: func(a: s32, b: s32) -> s32;
 
     /// subtract the second number from the first
-    subtract: func(a: f32, b: f32) -> f32;
+    subtract: func(a: s32, b: s32) -> s32;
 
     /// multiply two numbers
-    multiply: func(a: f32, b: f32) -> f32;
+    multiply: func(a: s32, b: s32) -> s32;
 
     /// divide the first number by the second
-    divide: func(a: f32, b: f32) -> f32;
+    divide: func(a: s32, b: s32) -> s32;
 }
 
 /// the calculator world

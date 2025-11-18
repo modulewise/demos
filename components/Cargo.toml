@@ -12,4 +12,4 @@ members = [
 resolver = "3"
 
 [workspace.dependencies]
-wit-bindgen = "0.44"
+wit-bindgen = "0.48"

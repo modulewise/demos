@@ -1,4 +1,3 @@
 [overrides]
-"wasi:config" = { path = "./wit/overrides/wasi-config" }
-"wasi:keyvalue" = { path = "./wit/overrides/wasi-keyvalue" }
 "componentized:valkey" = { path = "./wit/overrides/componentized-valkey" }
+"wasi:keyvalue" = { path = "./wit/overrides/wasi-keyvalue" }
