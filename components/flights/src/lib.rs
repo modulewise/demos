@@ -1,7 +1,7 @@
 #![no_main]
 
 use exports::modulewise::demo::flights;
-use modulewise::demo::rest_client;
+use modulewise::demo::http_client;
 
 wit_bindgen::generate!({
     path: "../wit",
@@ -33,7 +33,7 @@ impl Flights {
 impl flights::Guest for Flights {
     fn get_flight_by_id(id: String) -> Option<flights::Flight> {
         let url = format!("{}/flights/{id}", Self::base_url());
-        match rest_client::get(&url, &[]) {
+        match http_client::get(&url, &[]) {
             Ok(response) => serde_json::from_str(&response.body).ok(),
             Err(_) => None,
         }
@@ -41,7 +41,7 @@ impl flights::Guest for Flights {
 
     fn get_flights() -> Vec<flights::Flight> {
         let url = format!("{}/flights", Self::base_url());
-        match rest_client::get(&url, &[]) {
+        match http_client::get(&url, &[]) {
             Ok(response) => serde_json::from_str(&response.body).unwrap_or_else(|_| vec![]),
             Err(_) => vec![],
         }
@@ -64,7 +64,7 @@ impl flights::Guest for Flights {
         let url = format!("{}/flights/search", Self::base_url());
         let json = serde_json::to_string(&search_request).unwrap_or_default();
         let headers = vec![("Content-Type".to_string(), "application/json".to_string())];
-        match rest_client::post(&url, &headers, &json) {
+        match http_client::post(&url, &headers, &json) {
             Ok(response) => serde_json::from_str(&response.body).unwrap_or_else(|_| vec![]),
             Err(_) => vec![],
         }

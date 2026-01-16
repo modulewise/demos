@@ -1,6 +1,6 @@
 [package]
-name = "rest-client"
-version = "0.1.0"
+name = "http-client"
+version = "0.2.0"
 edition = "2024"
 
 [lib]

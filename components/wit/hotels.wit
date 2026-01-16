@@ -21,7 +21,7 @@ interface hotels {
 }
 
 world hotels-world {
-    include wasi:config/imports@0.2.0-draft;
-    import rest-client;
+    import wasi:config/store@0.2.0-rc.1;
+    import http-client;
     export hotels;
 }

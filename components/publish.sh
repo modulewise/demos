@@ -5,7 +5,7 @@ set -euo pipefail
 COMPONENTS=("calculator" "hello")
 
 for COMPONENT in "${COMPONENTS[@]}"; do
-  VERSION=0.1.0
+  VERSION=0.2.0
   wkg oci push \
     --annotation "org.opencontainers.image.title=${COMPONENT}" \
     --annotation "org.opencontainers.image.description=${COMPONENT} component for modulewise demos" \

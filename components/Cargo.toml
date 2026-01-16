@@ -4,12 +4,12 @@ members = [
     "flights",
     "greeter",
     "hotels",
+    "http-client",
     "incrementor",
     "intercepting-greeter",
-    "rest-client",
     "valkey-publisher",
 ]
 resolver = "3"
 
 [workspace.dependencies]
-wit-bindgen = "0.44"
+wit-bindgen = "0.51"

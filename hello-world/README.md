@@ -42,12 +42,15 @@ With the session established, you can list available tools:
 ./list_tools.sh
 ```
 
-You should see two tools: `hello_greet` and `aloha_greet`
+You should see three tools:
+- `hello.greeter.greet`
+- `aloha.greeter.greet`
+- `pirate.greeter.greet`
 
-First, call the `hello_greet` tool with a `name` parameter:
+First, call the `hello.greeter.greet` tool with a `name` parameter:
 
 ```sh
-./call_tool.sh hello_greet name=World
+./call_tool.sh hello.greeter.greet name=World
 ```
 
 You will see the greeting in the response:
@@ -55,7 +58,7 @@ You will see the greeting in the response:
 ```json
 {
   "jsonrpc": "2.0",
-  "id": 2,
+  "id": 3,
   "result": {
     "content": [
       {
@@ -68,10 +71,10 @@ You will see the greeting in the response:
 }
 ```
 
-If you take a look at the `hello-world.toml` file passed to the `toolbelt` server above, you will see that the `aloha_greet` variant uses the same `greeter.wasm` but includes `config.greeting = "Aloha"` to override the default "Hello" greeting:
+If you take a look at the `hello-world.toml` file passed to the `toolbelt` server above, you will see that the `aloha` variant uses the same `greeter.wasm` but includes `config.greeting = "Aloha"` to override the default "Hello" greeting:
 
 ```sh
-./call_tool.sh aloha_greet name=World
+./call_tool.sh aloha.greeter.greet name=World
 ```
 
 And indeed, it responds with that greeting:
@@ -79,7 +82,7 @@ And indeed, it responds with that greeting:
 ```json
 {
   "jsonrpc": "2.0",
-  "id": 3,
+  "id": 4,
   "result": {
     "content": [
       {
@@ -92,10 +95,48 @@ And indeed, it responds with that greeting:
 }
 ```
 
-If you want to explore the Wasm Component, have a look at the greeter [project](./../components/greeter) and its WebAssembly Interface Type (WIT) [definition](./../components/wit/greeter.wit).
+Finally, notice in `hello-world.toml` that the `pirate` variant is an interceptor.
+It adds a prefix and suffix, but otherwise composes with the `aloha` component.
+
+```toml
+[pirate]
+uri = "../components/lib/intercepting-greeter.wasm"
+config.prefix = "Ahoy and "
+config.suffix = " Arrr!"
+intercepts = ["aloha"]
+exposed = true
+```
+
+Call it just like the others:
+
+```sh
+./call_tool.sh pirate.greeter.greet name=World
+```
+
+And see the result of the composed interception:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Ahoy and Aloha World! Arrr!"
+      }
+    ],
+    "isError": false
+  }
+}
+```
+
+If you want to explore the Wasm Components, have a look at the greeter [project](./../components/greeter) and its WebAssembly Interface Type (WIT) [definition](./../components/wit/greeter.wit) as well as the
+[intercepting-greeter](./../components/intercepting-greeter) and its
+[WIT](./../components/wit/intercepting-greeter.wit).
 
 ## License
 
-Copyright (c) 2025 Modulewise Inc and the Modulewise Demos contributors.
+Copyright (c) 2026 Modulewise Inc and the Modulewise Demos contributors.
 
 Apache License v2.0: see [LICENSE](./LICENSE) for details.

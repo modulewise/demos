@@ -1,17 +1,17 @@
 #![no_main]
 
-use exports::modulewise::demo::rest_client::{Guest, HttpResponse};
+use exports::modulewise::demo::http_client::{Guest, HttpResponse};
 use wasi::http::types::{Headers, OutgoingBody, OutgoingRequest, Scheme};
 
 wit_bindgen::generate!({
     path: "../wit",
-    world: "rest-client-world",
+    world: "http-client-world",
     generate_all
 });
 
-struct RestClient;
+struct HttpClient;
 
-impl RestClient {
+impl HttpClient {
     fn request(
         url: &str,
         headers: Vec<(String, String)>,
@@ -84,7 +84,7 @@ impl RestClient {
             .map_err(|()| "Failed to get response stream".to_string())?;
 
         let mut body_string = String::new();
-        while let Ok(v) = stream.blocking_read(1024) {
+        while let Ok(v) = stream.blocking_read(8192) {
             if v.is_empty() {
                 break;
             }
@@ -103,7 +103,7 @@ impl RestClient {
     }
 }
 
-impl Guest for RestClient {
+impl Guest for HttpClient {
     fn get(url: String, headers: Vec<(String, String)>) -> Result<HttpResponse, String> {
         Self::request(&url, headers, &wasi::http::types::Method::Get, None)
     }
@@ -117,4 +117,4 @@ impl Guest for RestClient {
     }
 }
 
-export!(RestClient);
+export!(HttpClient);

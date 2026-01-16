@@ -1,4 +1,4 @@
-package wasi:config@0.2.0-draft;
+package wasi:config@0.2.0-rc.1;
 
 interface store {
   /// An error type that encapsulates the different errors that can occur fetching configuration values.

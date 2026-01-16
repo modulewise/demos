@@ -5,4 +5,12 @@ exposed = true
 [aloha]
 uri = "../components/lib/greeter.wasm"
 config.greeting = "Aloha"
+enables = "exposed"
+exposed = true
+
+[pirate]
+uri = "../components/lib/intercepting-greeter.wasm"
+config.prefix = "Ahoy and "
+config.suffix = " Arrr!"
+intercepts = ["aloha"]
 exposed = true
