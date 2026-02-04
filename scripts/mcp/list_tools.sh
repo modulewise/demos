@@ -20,7 +20,7 @@ echo "SERVER=$SERVER" > "$SESSION_FILE"
 echo "SESSION_ID=$SESSION_ID" >> "$SESSION_FILE"
 echo "NEXT_REQUEST_ID=$NEXT_REQUEST_ID" >> "$SESSION_FILE"
 
-TOOLS_RESPONSE=$(curl -s -X POST "$SERVER" \
+HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$SERVER" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -H "Mcp-Session-Id: $SESSION_ID" \
@@ -31,9 +31,17 @@ TOOLS_RESPONSE=$(curl -s -X POST "$SERVER" \
     \"params\": {}
   }")
 
-if [ -z "$TOOLS_RESPONSE" ]; then
-    echo "Error: No response from server. Session may have expired. Run ./initialize.sh to create a new session." >&2
+HTTP_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+TOOLS_RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
+
+if [ "$HTTP_CODE" = "401" ] || [ "$HTTP_CODE" = "404" ]; then
+    echo "Error: Session expired or not found. Run ./initialize.sh to create a new session." >&2
     exit 1
 fi
 
-echo "$TOOLS_RESPONSE" | grep "^data:" | sed 's/^data: //' | jq .
+if [ -z "$TOOLS_RESPONSE" ]; then
+    echo "Error: No response from server." >&2
+    exit 1
+fi
+
+echo "$TOOLS_RESPONSE" | grep '^data: {' | sed 's/^data: //' | jq .
