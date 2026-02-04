@@ -58,7 +58,7 @@ for arg in "$@"; do
 done
 ARGUMENTS="$ARGUMENTS}"
 
-CALL_RESPONSE=$(curl -s -X POST "$SERVER" \
+HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$SERVER" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -H "Mcp-Session-Id: $SESSION_ID" \
@@ -72,9 +72,17 @@ CALL_RESPONSE=$(curl -s -X POST "$SERVER" \
     }
   }")
 
-if [ -z "$CALL_RESPONSE" ]; then
-    echo "Error: No response from server. Session may have expired. Run ./initialize.sh to create a new session." >&2
+HTTP_CODE=$(echo "$HTTP_RESPONSE" | tail -n1)
+CALL_RESPONSE=$(echo "$HTTP_RESPONSE" | sed '$d')
+
+if [ "$HTTP_CODE" = "401" ] || [ "$HTTP_CODE" = "404" ]; then
+    echo "Error: Session expired or not found. Run ./initialize.sh to create a new session." >&2
     exit 1
 fi
 
-echo "$CALL_RESPONSE" | sed -n '/^data: /,/^id: /{/^id: /d;p;}' | sed '1s/^data: //' | tr -d '\000-\037' | jq '.result.structuredContent // .'
+if [ -z "$CALL_RESPONSE" ]; then
+    echo "Error: No response from server." >&2
+    exit 1
+fi
+
+echo "$CALL_RESPONSE" | grep '^data: {' | sed 's/^data: //' | tr -d '\000-\037' | jq '.result.structuredContent // .'
